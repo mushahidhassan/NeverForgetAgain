@@ -18,6 +18,8 @@ public class TasksProvider extends ContentProvider {
     private static final String BASE_PATH = "tasks";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH );
 
+    public static final String CONTENT_ITEM_TYPE = "Task";
+
     // Constant to identify the requested operation
     private static final int TASKS = 1;
     private static final int TASKS_ID = 2;
@@ -41,6 +43,9 @@ public class TasksProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        if (uriMatcher.match(uri) == TASKS_ID){
+            selection = DbHelper.TASK_ID + "=" + uri.getLastPathSegment();
+        }
         return database.query(DbHelper.TABLE_TASKS, DbHelper.ALL_COLUMNS, selection, null, null, null, DbHelper.TASK_CREATED + " DESC");
     }
 
